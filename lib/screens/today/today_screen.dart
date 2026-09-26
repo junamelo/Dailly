@@ -3,6 +3,7 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 
 import '../../models/routine.dart';
 import '../../providers/routine_provider.dart';
+import '../../providers/progress_provider.dart';
 import '../routine_detail/routine_detail_screen.dart';
 
 class TodayScreen extends ConsumerWidget {
@@ -20,18 +21,20 @@ class TodayScreen extends ConsumerWidget {
         const SizedBox(height: 28),
         Text('Mes routines', style: theme.textTheme.titleLarge?.copyWith(fontWeight: FontWeight.w700)),
         const SizedBox(height: 12),
-        for (final routine in routines) _RoutineCard(routine: routine),
+          for (final routine in routines) _RoutineCard(routine: routine),
       ]),
     );
   }
 }
 
-class _RoutineCard extends StatelessWidget {
+class _RoutineCard extends ConsumerWidget {
   final Routine routine;
   const _RoutineCard({required this.routine});
   @override
-  Widget build(BuildContext context) {
+  Widget build(BuildContext context, WidgetRef ref) {
     final color = Color(routine.colorValue);
+    final completed = ref.watch(progressProvider).completedCount(routine.id);
+    final progress = routine.steps.isEmpty ? 0.0 : completed / routine.steps.length;
     final open = () => Navigator.of(context).push(MaterialPageRoute(builder: (_) => RoutineDetailScreen(routine: routine)));
     return Card(
       color: color.withValues(alpha: 0.16),
@@ -40,11 +43,11 @@ class _RoutineCard extends StatelessWidget {
         Row(children: [
           Container(width: 52, height: 52, alignment: Alignment.center, decoration: BoxDecoration(color: color.withValues(alpha: 0.25), borderRadius: BorderRadius.circular(16)), child: Text(routine.icon, style: const TextStyle(fontSize: 28))),
           const SizedBox(width: 14),
-          Expanded(child: Column(crossAxisAlignment: CrossAxisAlignment.start, children: [Text(routine.name, style: const TextStyle(fontSize: 17, fontWeight: FontWeight.w700)), const SizedBox(height: 5), Text('0/${routine.steps.length} étapes')])),
+          Expanded(child: Column(crossAxisAlignment: CrossAxisAlignment.start, children: [Text(routine.name, style: const TextStyle(fontSize: 17, fontWeight: FontWeight.w700)), const SizedBox(height: 5), Text('$completed/${routine.steps.length} étapes')])),
           Text('🔥 ${routine.currentStreak}'),
         ]),
         const SizedBox(height: 16),
-        ClipRRect(borderRadius: BorderRadius.circular(20), child: const LinearProgressIndicator(value: 0, minHeight: 8, backgroundColor: Color(0x33FFFFFF))),
+        ClipRRect(borderRadius: BorderRadius.circular(20), child: LinearProgressIndicator(value: progress, minHeight: 8, backgroundColor: const Color(0x33FFFFFF))),
         const SizedBox(height: 14),
         Align(alignment: Alignment.centerRight, child: FilledButton.tonal(onPressed: open, child: const Text('Commencer'))),
       ]))),
