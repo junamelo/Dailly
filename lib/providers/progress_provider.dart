@@ -36,6 +36,11 @@ class ProgressController extends ChangeNotifier {
   }
 
   void _load() {
+    final today = _dateKey(DateTime.now());
+    if (_box.get('completion_date') != today) {
+      _box.put('completion_date', today);
+      return;
+    }
     final raw = _box.get('completed_steps');
     if (raw is! String) return;
     final decoded = jsonDecode(raw);
@@ -45,6 +50,8 @@ class ProgressController extends ChangeNotifier {
       if (values is List) _completed[entry.key.toString()] = values.map((value) => value.toString()).toSet();
     }
   }
+
+  String _dateKey(DateTime date) => '${date.year}-${date.month}-${date.day}';
 
   Future<void> _save() async {
     final data = _completed.map((key, value) => MapEntry(key, value.toList()));
