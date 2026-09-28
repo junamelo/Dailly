@@ -22,6 +22,22 @@ class TodayScreen extends ConsumerWidget {
         const SizedBox(height: 28),
         Text('Mes routines', style: theme.textTheme.titleLarge?.copyWith(fontWeight: FontWeight.w700)),
         const SizedBox(height: 12),
+        if (routines.isEmpty)
+          Card(
+            child: Padding(
+              padding: const EdgeInsets.all(24),
+              child: Column(children: [
+                const Text('🌱', style: TextStyle(fontSize: 48)),
+                const SizedBox(height: 12),
+                const Text('Aucune routine pour le moment', style: TextStyle(fontSize: 17, fontWeight: FontWeight.w700)),
+                const SizedBox(height: 8),
+                const Text('Crée une routine pour commencer ta journée.', textAlign: TextAlign.center),
+                const SizedBox(height: 16),
+                FilledButton.icon(onPressed: () => Navigator.of(context).push(MaterialPageRoute(builder: (_) => const CreateRoutineScreen())), icon: const Icon(Icons.add), label: const Text('Créer une routine')),
+              ]),
+            ),
+          )
+        else
           for (final routine in routines) _RoutineCard(routine: routine),
       ]),
     );
