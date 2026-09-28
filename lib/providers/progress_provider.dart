@@ -26,6 +26,8 @@ class ProgressController extends ChangeNotifier {
 
   int get levelProgress => totalXp % 100;
 
+  bool get firstRoutineBadge => totalXp >= 30;
+
   void toggle(String routineId, String stepId) {
     final steps = _completed.putIfAbsent(routineId, () => <String>{});
     if (!steps.add(stepId)) steps.remove(stepId);

@@ -41,7 +41,7 @@ class ProgressScreen extends ConsumerWidget {
           const SizedBox(height: 28),
           Text('Badges', style: theme.textTheme.titleLarge?.copyWith(fontWeight: FontWeight.w700)),
           const SizedBox(height: 12),
-          const Card(child: ListTile(leading: Text('🌱', style: TextStyle(fontSize: 28)), title: Text('Première routine'), subtitle: Text('Complète ta première routine pour débloquer ce badge'))),
+          Card(child: ListTile(leading: Text(progress.firstRoutineBadge ? '🏁' : '🔒', style: const TextStyle(fontSize: 28)), title: const Text('Première routine'), subtitle: Text(progress.firstRoutineBadge ? 'Badge débloqué !' : 'Complète ta première routine pour débloquer ce badge'))),
         ],
       ),
     );
