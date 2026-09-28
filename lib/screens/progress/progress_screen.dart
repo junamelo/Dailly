@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
 import '../../providers/routine_provider.dart';
+import '../../providers/progress_provider.dart';
 
 class ProgressScreen extends ConsumerWidget {
   const ProgressScreen({super.key});
@@ -9,6 +10,7 @@ class ProgressScreen extends ConsumerWidget {
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     final routines = ref.watch(routineProvider).routines;
+    final progress = ref.watch(progressProvider);
     final theme = Theme.of(context);
 
     return Scaffold(
@@ -24,11 +26,11 @@ class ProgressScreen extends ConsumerWidget {
             child: Padding(
               padding: const EdgeInsets.all(20),
               child: Column(crossAxisAlignment: CrossAxisAlignment.start, children: [
-                Text('Niveau 1', style: theme.textTheme.titleLarge?.copyWith(fontWeight: FontWeight.w700)),
+                Text('Niveau ${progress.level}', style: theme.textTheme.titleLarge?.copyWith(fontWeight: FontWeight.w700)),
                 const SizedBox(height: 8),
-                const Text('0 / 100 XP'),
+                Text('${progress.levelProgress} / 100 XP'),
                 const SizedBox(height: 12),
-                ClipRRect(borderRadius: BorderRadius.circular(20), child: const LinearProgressIndicator(value: 0, minHeight: 10)),
+                ClipRRect(borderRadius: BorderRadius.circular(20), child: LinearProgressIndicator(value: progress.levelProgress / 100, minHeight: 10)),
               ]),
             ),
           ),
