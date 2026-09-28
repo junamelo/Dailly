@@ -5,15 +5,16 @@ import '../../models/routine.dart';
 import '../../providers/routine_provider.dart';
 import '../../providers/progress_provider.dart';
 import '../routine_detail/routine_detail_screen.dart';
+import '../routines/create_routine_screen.dart';
 
 class TodayScreen extends ConsumerWidget {
   const TodayScreen({super.key});
   @override
   Widget build(BuildContext context, WidgetRef ref) {
-    final routines = ref.watch(routineProvider);
+    final routines = ref.watch(routineProvider).routines;
     final theme = Theme.of(context);
     return Scaffold(
-      appBar: AppBar(title: const Text('DailyLife', style: TextStyle(fontWeight: FontWeight.w700))),
+      appBar: AppBar(title: const Text('DailyLife', style: TextStyle(fontWeight: FontWeight.w700)), actions: [IconButton(onPressed: () => Navigator.of(context).push(MaterialPageRoute(builder: (_) => const CreateRoutineScreen())), icon: const Icon(Icons.add))]),
       body: ListView(padding: const EdgeInsets.fromLTRB(20, 12, 20, 32), children: [
         Text('Bonjour 👋', style: theme.textTheme.headlineMedium?.copyWith(fontWeight: FontWeight.w700)),
         const SizedBox(height: 4),

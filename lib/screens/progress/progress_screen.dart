@@ -8,7 +8,7 @@ class ProgressScreen extends ConsumerWidget {
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
-    final routines = ref.watch(routineProvider);
+    final routines = ref.watch(routineProvider).routines;
     final theme = Theme.of(context);
 
     return Scaffold(
