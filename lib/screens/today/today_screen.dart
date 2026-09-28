@@ -37,7 +37,18 @@ class _RoutineCard extends ConsumerWidget {
     final completed = ref.watch(progressProvider).completedCount(routine.id);
     final progress = routine.steps.isEmpty ? 0.0 : completed / routine.steps.length;
     final open = () => Navigator.of(context).push(MaterialPageRoute(builder: (_) => RoutineDetailScreen(routine: routine)));
-    return Card(
+    return Dismissible(
+      key: ValueKey(routine.id),
+      direction: DismissDirection.endToStart,
+      background: Container(
+        margin: const EdgeInsets.only(bottom: 12),
+        alignment: Alignment.centerRight,
+        padding: const EdgeInsets.only(right: 24),
+        decoration: BoxDecoration(color: Colors.red.shade400, borderRadius: BorderRadius.circular(24)),
+        child: const Icon(Icons.delete_outline, color: Colors.white),
+      ),
+      onDismissed: (_) => ref.read(routineProvider).removeRoutine(routine.id),
+      child: Card(
       color: color.withValues(alpha: 0.16),
       shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(24)),
       child: InkWell(borderRadius: BorderRadius.circular(24), onTap: open, child: Padding(padding: const EdgeInsets.all(18), child: Column(children: [
@@ -52,6 +63,7 @@ class _RoutineCard extends ConsumerWidget {
         const SizedBox(height: 14),
         Align(alignment: Alignment.centerRight, child: FilledButton.tonal(onPressed: open, child: const Text('Commencer'))),
       ]))),
+      ),
     );
   }
 }

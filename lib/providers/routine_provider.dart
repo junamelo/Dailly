@@ -40,6 +40,12 @@ class RoutineController extends ChangeNotifier {
     notifyListeners();
   }
 
+  void removeRoutine(String id) {
+    routines.removeWhere((routine) => routine.id == id);
+    _save();
+    notifyListeners();
+  }
+
   Future<void> _save() async => _box.put('routines', jsonEncode(routines.map(_toJson).toList()));
 
   Map<String, dynamic> _toJson(Routine r) => {'id': r.id, 'name': r.name, 'icon': r.icon, 'color': r.colorValue, 'streak': r.currentStreak, 'steps': r.steps.map((s) => {'id': s.id, 'title': s.title, 'emoji': s.emoji, 'position': s.position}).toList()};
