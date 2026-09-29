@@ -3,6 +3,7 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 
 import '../../models/routine.dart';
 import '../../providers/progress_provider.dart';
+import '../../providers/routine_provider.dart';
 
 class RoutineDetailScreen extends ConsumerWidget {
   final Routine routine;
@@ -16,7 +17,31 @@ class RoutineDetailScreen extends ConsumerWidget {
     final ratio = routine.steps.isEmpty ? 0.0 : count / routine.steps.length;
 
     return Scaffold(
-      appBar: AppBar(title: Text(routine.name)),
+      appBar: AppBar(
+        title: Text(routine.name),
+        actions: [
+          IconButton(
+            icon: const Icon(Icons.delete_outline),
+            onPressed: () async {
+              final confirmed = await showDialog<bool>(
+                context: context,
+                builder: (dialogContext) => AlertDialog(
+                  title: const Text('Supprimer la routine ?'),
+                  content: Text('La routine « ${routine.name} » sera supprimée.'),
+                  actions: [
+                    TextButton(onPressed: () => Navigator.pop(dialogContext, false), child: const Text('Annuler')),
+                    FilledButton(onPressed: () => Navigator.pop(dialogContext, true), child: const Text('Supprimer')),
+                  ],
+                ),
+              );
+              if (confirmed == true && context.mounted) {
+                ref.read(routineProvider).removeRoutine(routine.id);
+                Navigator.of(context).pop();
+              }
+            },
+          ),
+        ],
+      ),
       body: ListView(
         padding: const EdgeInsets.all(20),
         children: [
