@@ -46,6 +46,16 @@ class RoutineController extends ChangeNotifier {
     notifyListeners();
   }
 
+  void updateRoutine({required String id, required String name, required String icon, required List<String> stepNames}) {
+    final index = routines.indexWhere((routine) => routine.id == id);
+    if (index < 0) return;
+    routines[index] = Routine(id: id, name: name, icon: icon, colorValue: routines[index].colorValue, currentStreak: routines[index].currentStreak, steps: [
+      for (var i = 0; i < stepNames.length; i++) HabitStep(id: '$id-$i', title: stepNames[i], emoji: '✅', position: i),
+    ]);
+    _save();
+    notifyListeners();
+  }
+
   Future<void> _save() async => _box.put('routines', jsonEncode(routines.map(_toJson).toList()));
 
   Map<String, dynamic> _toJson(Routine r) => {'id': r.id, 'name': r.name, 'icon': r.icon, 'color': r.colorValue, 'streak': r.currentStreak, 'steps': r.steps.map((s) => {'id': s.id, 'title': s.title, 'emoji': s.emoji, 'position': s.position}).toList()};

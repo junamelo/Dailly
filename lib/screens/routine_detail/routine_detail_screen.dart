@@ -4,6 +4,7 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import '../../models/routine.dart';
 import '../../providers/progress_provider.dart';
 import '../../providers/routine_provider.dart';
+import '../routines/create_routine_screen.dart';
 
 class RoutineDetailScreen extends ConsumerWidget {
   final Routine routine;
@@ -20,6 +21,7 @@ class RoutineDetailScreen extends ConsumerWidget {
       appBar: AppBar(
         title: Text(routine.name),
         actions: [
+          IconButton(icon: const Icon(Icons.edit_outlined), onPressed: () => Navigator.of(context).push(MaterialPageRoute(builder: (_) => CreateRoutineScreen(routine: routine)))),
           IconButton(
             icon: const Icon(Icons.delete_outline),
             onPressed: () async {

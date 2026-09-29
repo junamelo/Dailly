@@ -1,9 +1,11 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import '../../providers/routine_provider.dart';
+import '../../models/routine.dart';
 
 class CreateRoutineScreen extends ConsumerStatefulWidget {
-  const CreateRoutineScreen({super.key});
+  final Routine? routine;
+  const CreateRoutineScreen({super.key, this.routine});
   @override
   ConsumerState<CreateRoutineScreen> createState() => _CreateRoutineScreenState();
 }
@@ -13,17 +15,34 @@ class _CreateRoutineScreenState extends ConsumerState<CreateRoutineScreen> {
   final steps = <TextEditingController>[TextEditingController()];
   String icon = '✨';
   @override
+  void initState() {
+    super.initState();
+    final routine = widget.routine;
+    if (routine != null) {
+      nameController.text = routine.name;
+      icon = routine.icon;
+      steps
+        ..first.dispose()
+        ..clear()
+        ..addAll(routine.steps.map((step) => TextEditingController(text: step.title)));
+    }
+  }
+  @override
   void dispose() { nameController.dispose(); for (final c in steps) c.dispose(); super.dispose(); }
   void save() {
     final name = nameController.text.trim();
     final values = steps.map((c) => c.text.trim()).where((v) => v.isNotEmpty).toList();
     if (name.isEmpty || values.isEmpty) return;
-    ref.read(routineProvider).addRoutine(name: name, icon: icon, stepNames: values);
+    if (widget.routine == null) {
+      ref.read(routineProvider).addRoutine(name: name, icon: icon, stepNames: values);
+    } else {
+      ref.read(routineProvider).updateRoutine(id: widget.routine!.id, name: name, icon: icon, stepNames: values);
+    }
     Navigator.pop(context);
   }
   @override
   Widget build(BuildContext context) => Scaffold(
-    appBar: AppBar(title: const Text('Nouvelle routine')),
+    appBar: AppBar(title: Text(widget.routine == null ? 'Nouvelle routine' : 'Modifier la routine')),
     body: ListView(padding: const EdgeInsets.all(20), children: [
       TextField(controller: nameController, decoration: const InputDecoration(labelText: 'Nom de la routine', border: OutlineInputBorder())),
       const SizedBox(height: 18),
