@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:intl/intl.dart';
 
 import '../../models/routine.dart';
 import '../../providers/routine_provider.dart';
@@ -18,6 +19,8 @@ class TodayScreen extends ConsumerWidget {
       body: ListView(padding: const EdgeInsets.fromLTRB(20, 12, 20, 32), children: [
         Text('Bonjour 👋', style: theme.textTheme.headlineMedium?.copyWith(fontWeight: FontWeight.w700)),
         const SizedBox(height: 4),
+          Text(DateFormat('EEEE d MMMM yyyy', 'fr_FR').format(DateTime.now()), style: theme.textTheme.bodyMedium?.copyWith(color: theme.colorScheme.primary, fontWeight: FontWeight.w600)),
+          const SizedBox(height: 4),
         Text('Voici tes routines pour aujourd’hui.', style: theme.textTheme.bodyLarge?.copyWith(color: theme.colorScheme.onSurfaceVariant)),
         const SizedBox(height: 28),
         Text('Mes routines', style: theme.textTheme.titleLarge?.copyWith(fontWeight: FontWeight.w700)),
